@@ -1,0 +1,5 @@
+export const FETCH_BOOKMARKS = "FETCH_BOOKMARKS";
+export const FETCH_REPOS = "FETCH_REPOS";
+export const NEW_BOOKMARK = "NEW_BOOKMARK";
+export const DELETE_BOOKMARK = "DELETE_BOOKMARK";
+export const UPDATE_ERROR = "UPDATE_ERROR";

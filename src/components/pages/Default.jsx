@@ -1,48 +1,17 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import BookmarksList from "../organisms/BookmarksList";
 import NavBar from "../atoms/NavBar";
 import SearchBookmark from "../molecules/SearchBookmark";
+import { connect } from "react-redux";
+import { fetchBookmarks, searchRepos } from "../../store/actions";
 
-class App extends Component {
+class Default extends Component {
   state = {
-    title: "Git Bookmarking Application",
+    title: "Github Bookmarking Application",
     baseURL: "http://localhost:3000",
-    bookmarksSaved: [],
-    bookmarksSearched: [],
+    reposSearched: [],
     errorMessage: null,
-    bookmarks: [
-      {
-        id: 1,
-        name: "git-api-service",
-        full_name: "JohnJasso/git-api-service",
-        language: "Javascript",
-        stargazers_count: "1",
-        forks_count: "3",
-        watchers: "5",
-        description:
-          "A repository used in testing dfasdf dfadfas dfasd dfadsf asdfa sdfasd",
-      },
-      {
-        id: 2,
-        name: "tetris",
-        full_name: "user1/tetris",
-        language: "Javascript",
-        stargazers_count: "1",
-        forks_count: "3",
-        watchers: "5",
-        description: "A repository used in testing",
-      },
-      {
-        id: 3,
-        name: "tic-tac-toe",
-        full_name: "usuarioDoce/tic-tac-toe",
-        language: "Python",
-        stargazers_count: "1",
-        forks_count: "3",
-        watchers: "5",
-        description: "A repository used in testing",
-      },
-    ],
   };
 
   constructor() {
@@ -52,7 +21,7 @@ class App extends Component {
 
   async componentDidMount() {
     console.log("Default - Component Mounted");
-    this.getBookmarks();
+    this.props.fetchBookmarks();
   }
 
   componentDidUpdate() {
@@ -66,11 +35,11 @@ class App extends Component {
       <React.Fragment>
         <NavBar
           title={this.state.title}
-          totalBookmarks={this.state.bookmarks.length}
+          totalBookmarks={this.props.bookmarks.length}
         ></NavBar>
         <main className="container mt-5">
-          <div className="d-flex justify-content-between">
-            <div style={{ maxWidth: 700 }}>
+          <div className="d-flex flex-wrap justify-content-between">
+            <div className="mb-3" style={{ maxWidth: 700 }}>
               <h5 className="mb-3">
                 Search for repositories to bookmark: <br />
                 <small className="text-muted">
@@ -84,14 +53,14 @@ class App extends Component {
               ></SearchBookmark>
               <BookmarksList
                 search={true}
-                bookmarks={this.state.bookmarksSearched}
+                bookmarks={this.props.repos}
                 onBookmark={this.handleBookmark}
               ></BookmarksList>
             </div>
             <div>
               <h5 className="mb-3">Bookmarked repositories:</h5>
               <BookmarksList
-                bookmarks={this.state.bookmarksSaved}
+                bookmarks={this.props.bookmarks}
                 onDelete={this.handleDelete}
               ></BookmarksList>
             </div>
@@ -101,28 +70,19 @@ class App extends Component {
     );
   }
 
-  getBookmarks = async () => {
-    const url = new URL(`${this.state.baseURL}/api/bookmarks`);
-    try {
-      const response = await fetch(url);
-      const json = await response.json();
-      this.setState({ bookmarksSaved: json });
-    } catch (error) {
-      console.log("Server error: ", error);
-      this.setState({ errorMessage: error });
-    }
-  };
+  //   getBookmarks = async () => {
+  //     const url = new URL(`${this.state.baseURL}/api/bookmarks`);
+  //     try {
+  //       const response = await fetch(url);
+  //       const json = await response.json();
+  //       await this.setState({ bookmarksSaved: json });
+  //     } catch (error) {
+  //       console.log("Server error: ", error);
+  //       this.setState({ errorMessage: error });
+  //     }
+  //   };
   handleSearch = async (term) => {
-    console.log("Term:", term);
-    const url = new URL(`${this.state.baseURL}/api/search-repo?term=${term}`);
-    try {
-      const response = await fetch(url);
-      const json = await response.json();
-      this.setState({ bookmarksSearched: json.items });
-    } catch (error) {
-      console.log("Server error: ", error);
-      this.setState({ errorMessage: error });
-    }
+    this.props.searchRepos(term);
   };
   handleBookmark = async (id) => {
     console.log("Bookmark", id);
@@ -136,7 +96,7 @@ class App extends Component {
       });
       const json = await response.json();
       if (json.message === "Bookmarked repository") {
-        this.getBookmarks();
+        await this.getBookmarks();
       }
     } catch (error) {
       console.log("Server error: ", error);
@@ -155,7 +115,7 @@ class App extends Component {
       });
       const json = await response.json();
       if (json.message === "Removed bookmark") {
-        this.getBookmarks();
+        await this.getBookmarks();
       }
     } catch (error) {
       console.log("Server error: ", error);
@@ -164,4 +124,18 @@ class App extends Component {
   };
 }
 
-export default App;
+Default.propTypes = {
+  fetchBookmarks: PropTypes.func.isRequired,
+  bookmarks: PropTypes.array.isRequired,
+  searchRepos: PropTypes.func.isRequired,
+  repos: PropTypes.array.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  bookmarks: state.bookmarks.items,
+  repos: state.bookmarks.repos,
+});
+
+export default connect(mapStateToProps, { fetchBookmarks, searchRepos })(
+  Default
+);
