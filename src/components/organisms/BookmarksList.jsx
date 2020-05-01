@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import StarButton from "../atoms/StarButton";
-import DeleteButton from "../atoms/DeleteButton";
 
 class App extends Component {
   render() {
@@ -57,8 +55,24 @@ class App extends Component {
                 </span>
               </div>
             </div>
-            {this.props.search && <StarButton></StarButton>}
-            {!this.props.search && <DeleteButton></DeleteButton>}
+            {this.props.search && (
+              <button
+                className="btn btn-outline-warning mt-auto mb-auto ml-5"
+                style={{ borderRadius: "50%" }}
+                onClick={() => this.sendBookmarkId(bookmark.id)}
+              >
+                <i className="fas fa-star"></i>
+              </button>
+            )}
+            {!this.props.search && (
+              <button
+                className="btn btn-outline-danger mt-auto mb-auto ml-5"
+                style={{ borderRadius: "50%" }}
+                onClick={() => this.sendDeleteId(bookmark.id)}
+              >
+                <i className="fas fa-trash-alt"></i>
+              </button>
+            )}
           </div>
         ))}
         {this.props.bookmarks.length === 0 && (
@@ -72,6 +86,12 @@ class App extends Component {
       </div>
     );
   }
+  sendBookmarkId = (id) => {
+    this.props.onBookmark(id);
+  };
+  sendDeleteId = (id) => {
+    this.props.onDelete(id);
+  };
 }
 
 export default App;

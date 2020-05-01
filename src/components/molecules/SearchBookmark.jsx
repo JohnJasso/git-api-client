@@ -32,7 +32,7 @@ class SearchBookmark extends Component {
   onSearchTerm = (e) => {
     this.setState({ searchTerm: e.target.value });
   };
-  sendTerm = (e) => {
+  sendTerm = () => {
     this.props.onSearchBookMark(this.state.searchTerm);
   };
 }

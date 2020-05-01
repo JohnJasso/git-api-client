@@ -52,15 +52,7 @@ class App extends Component {
 
   async componentDidMount() {
     console.log("Default - Component Mounted");
-    const url = new URL(`${this.state.baseURL}/api/bookmarks`);
-    try {
-      const response = await fetch(url);
-      const json = await response.json();
-      this.setState({ bookmarksSaved: json });
-    } catch (error) {
-      console.log("Server error: ", error);
-      this.setState({ errorMessage: error });
-    }
+    this.getBookmarks();
   }
 
   componentDidUpdate() {
@@ -93,27 +85,33 @@ class App extends Component {
               <BookmarksList
                 search={true}
                 bookmarks={this.state.bookmarksSearched}
+                onBookmark={this.handleBookmark}
               ></BookmarksList>
             </div>
             <div>
               <h5 className="mb-3">Bookmarked repositories:</h5>
               <BookmarksList
                 bookmarks={this.state.bookmarksSaved}
+                onDelete={this.handleDelete}
               ></BookmarksList>
             </div>
           </div>
-          {/* <List
-            counters={this.state.counters}
-            onReset={this.handleReset}
-            onDelete={this.handleDelete}
-            onIncrement={this.handleIncrement}
-            onDecrement={this.handleDecrement}
-          ></List> */}
         </main>
       </React.Fragment>
     );
   }
 
+  getBookmarks = async () => {
+    const url = new URL(`${this.state.baseURL}/api/bookmarks`);
+    try {
+      const response = await fetch(url);
+      const json = await response.json();
+      this.setState({ bookmarksSaved: json });
+    } catch (error) {
+      console.log("Server error: ", error);
+      this.setState({ errorMessage: error });
+    }
+  };
   handleSearch = async (term) => {
     console.log("Term:", term);
     const url = new URL(`${this.state.baseURL}/api/search-repo?term=${term}`);
@@ -121,6 +119,44 @@ class App extends Component {
       const response = await fetch(url);
       const json = await response.json();
       this.setState({ bookmarksSearched: json.items });
+    } catch (error) {
+      console.log("Server error: ", error);
+      this.setState({ errorMessage: error });
+    }
+  };
+  handleBookmark = async (id) => {
+    console.log("Bookmark", id);
+    const url = new URL(`${this.state.baseURL}/api/bookmark-repo/${id}`);
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Length": 0,
+        },
+      });
+      const json = await response.json();
+      if (json.message === "Bookmarked repository") {
+        this.getBookmarks();
+      }
+    } catch (error) {
+      console.log("Server error: ", error);
+      this.setState({ errorMessage: error });
+    }
+  };
+  handleDelete = async (id) => {
+    console.log("Delete", id);
+    const url = new URL(`${this.state.baseURL}/api/bookmark-repo/${id}`);
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Length": 0,
+        },
+      });
+      const json = await response.json();
+      if (json.message === "Removed bookmark") {
+        this.getBookmarks();
+      }
     } catch (error) {
       console.log("Server error: ", error);
       this.setState({ errorMessage: error });

@@ -6,12 +6,15 @@ class DeleteButton extends Component {
       <button
         className="btn btn-outline-danger mt-auto mb-auto ml-5"
         style={{ borderRadius: "50%" }}
-        // style={{ borderRadius: "50%", height: 45 }}
+        onClick={this.sendDeleteId}
       >
         <i className="fas fa-trash-alt"></i>
       </button>
     );
   }
+  sendDeleteId = () => {
+    this.props.onBookmark(this.props.bookmarkId);
+  };
 }
 
 export default DeleteButton;
