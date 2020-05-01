@@ -6,6 +6,10 @@ import SearchBookmark from "../molecules/SearchBookmark";
 class App extends Component {
   state = {
     title: "Git Bookmarking Application",
+    baseURL: "http://localhost:3000",
+    bookmarksSaved: [],
+    bookmarksSearched: [],
+    errorMessage: null,
     bookmarks: [
       {
         id: 1,
@@ -43,11 +47,20 @@ class App extends Component {
 
   constructor() {
     super();
-    console.log("App - Constructor");
+    console.log("Default - Constructor");
   }
 
-  componentDidMount() {
-    console.log("App - Component Mounted");
+  async componentDidMount() {
+    console.log("Default - Component Mounted");
+    const url = new URL(`${this.state.baseURL}/api/bookmarks`);
+    try {
+      const response = await fetch(url);
+      const json = await response.json();
+      this.setState({ bookmarksSaved: json });
+    } catch (error) {
+      console.log("Server error: ", error);
+      this.setState({ errorMessage: error });
+    }
   }
 
   componentDidUpdate() {
@@ -65,17 +78,28 @@ class App extends Component {
         ></NavBar>
         <main className="container mt-5">
           <div className="d-flex justify-content-between">
-            <div>
-              <h5 className="mb-3">Search for repositories to bookmark:</h5>
-              <SearchBookmark></SearchBookmark>
+            <div style={{ maxWidth: 700 }}>
+              <h5 className="mb-3">
+                Search for repositories to bookmark: <br />
+                <small className="text-muted">
+                  Separate keywords and define topics and languages in the
+                  following way:
+                  <i>tetris+language:c+topic:game</i>
+                </small>
+              </h5>
+              <SearchBookmark
+                onSearchBookMark={this.handleSearch}
+              ></SearchBookmark>
               <BookmarksList
                 search={true}
-                bookmarks={this.state.bookmarks}
+                bookmarks={this.state.bookmarksSearched}
               ></BookmarksList>
             </div>
             <div>
               <h5 className="mb-3">Bookmarked repositories:</h5>
-              <BookmarksList bookmarks={this.state.bookmarks}></BookmarksList>
+              <BookmarksList
+                bookmarks={this.state.bookmarksSaved}
+              ></BookmarksList>
             </div>
           </div>
           {/* <List
@@ -90,30 +114,17 @@ class App extends Component {
     );
   }
 
-  handleDelete = (counterId) => {
-    const arrCounters = this.state.counters.filter((c) => c.id !== counterId);
-    this.setState({ counters: arrCounters });
-  };
-  handleReset = () => {
-    const arrCounters = this.state.counters.map((c) => {
-      c.value = 0;
-      return c;
-    });
-    this.setState({ counters: arrCounters });
-  };
-  handleIncrement = (counter) => {
-    const arrCounters = [...this.state.counters];
-    const index = arrCounters.indexOf(counter);
-    arrCounters[index] = { ...counter };
-    arrCounters[index].value++;
-    this.setState({ counters: arrCounters });
-  };
-  handleDecrement = (counter) => {
-    const arrCounters = [...this.state.counters];
-    const index = arrCounters.indexOf(counter);
-    arrCounters[index] = { ...counter };
-    if (arrCounters[index].value > 0) arrCounters[index].value--;
-    this.setState({ counters: arrCounters });
+  handleSearch = async (term) => {
+    console.log("Term:", term);
+    const url = new URL(`${this.state.baseURL}/api/search-repo?term=${term}`);
+    try {
+      const response = await fetch(url);
+      const json = await response.json();
+      this.setState({ bookmarksSearched: json.items });
+    } catch (error) {
+      console.log("Server error: ", error);
+      this.setState({ errorMessage: error });
+    }
   };
 }
 

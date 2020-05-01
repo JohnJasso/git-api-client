@@ -17,7 +17,7 @@ class App extends Component {
               <div className="d-flex">
                 <h5 className="mr-5 list__repo-title">{bookmark.name}</h5>
                 {this.props.search && (
-                  <span className="list__repo-title">
+                  <span className="list__repo-title mr-2">
                     <i className="fas fa-user mr-2"></i>
                     {bookmark.full_name.split("/")[0]}
                   </span>
@@ -33,7 +33,7 @@ class App extends Component {
                 )}
               </div>
               {this.props.search && (
-                <div className="mb-1">
+                <div className="mb-1" style={{ maxWidth: 400 }}>
                   <span className="text-muted">{bookmark.description}</span>
                 </div>
               )}
@@ -61,6 +61,14 @@ class App extends Component {
             {!this.props.search && <DeleteButton></DeleteButton>}
           </div>
         ))}
+        {this.props.bookmarks.length === 0 && (
+          <div className="list-group-item d-flex justify-content-center">
+            <h6 className="mb-0 text-muted">
+              <i className="fas fa-inbox mr-2"></i>There are no bookmarks to
+              show
+            </h6>
+          </div>
+        )}
       </div>
     );
   }
