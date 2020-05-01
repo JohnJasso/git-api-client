@@ -4,13 +4,11 @@ import BookmarksList from "../organisms/BookmarksList";
 import NavBar from "../atoms/NavBar";
 import SearchBookmark from "../molecules/SearchBookmark";
 import { connect } from "react-redux";
-import { fetchBookmarks, searchRepos } from "../../store/actions";
+import { fetchBookmarks, searchRepos, addBookmark } from "../../store/actions";
 
 class Default extends Component {
   state = {
     title: "Github Bookmarking Application",
-    baseURL: "http://localhost:3000",
-    reposSearched: [],
     errorMessage: null,
   };
 
@@ -26,6 +24,12 @@ class Default extends Component {
 
   componentDidUpdate() {
     console.log("App - Updated");
+  }
+
+  componentWillReceiveProps(newProp) {
+    if (newProp.message === "Bookmarked repository") {
+      this.props.bookmarks.unshift(newProp.repository);
+    }
   }
 
   render() {
@@ -85,23 +89,23 @@ class Default extends Component {
     this.props.searchRepos(term);
   };
   handleBookmark = async (id) => {
-    console.log("Bookmark", id);
-    const url = new URL(`${this.state.baseURL}/api/bookmark-repo/${id}`);
-    try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Length": 0,
-        },
-      });
-      const json = await response.json();
-      if (json.message === "Bookmarked repository") {
-        await this.getBookmarks();
-      }
-    } catch (error) {
-      console.log("Server error: ", error);
-      this.setState({ errorMessage: error });
-    }
+    // const url = new URL(`${this.state.baseURL}/api/bookmark-repo/${id}`);
+    // try {
+    //   const response = await fetch(url, {
+    //     method: "PUT",
+    //     headers: {
+    //       "Content-Length": 0,
+    //     },
+    //   });
+    //   const json = await response.json();
+    //   if (json.message === "Bookmarked repository") {
+    //     await this.getBookmarks();
+    //   }
+    // } catch (error) {
+    //   console.log("Server error: ", error);
+    //   this.setState({ errorMessage: error });
+    // }
+    this.props.addBookmark(id);
   };
   handleDelete = async (id) => {
     console.log("Delete", id);
@@ -129,13 +133,18 @@ Default.propTypes = {
   bookmarks: PropTypes.array.isRequired,
   searchRepos: PropTypes.func.isRequired,
   repos: PropTypes.array.isRequired,
+  addBookmark: PropTypes.func,
+  newBookmark: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
   bookmarks: state.bookmarks.items,
   repos: state.bookmarks.repos,
+  newBookmark: state.bookmarks.newBookmark,
 });
 
-export default connect(mapStateToProps, { fetchBookmarks, searchRepos })(
-  Default
-);
+export default connect(mapStateToProps, {
+  fetchBookmarks,
+  searchRepos,
+  addBookmark,
+})(Default);

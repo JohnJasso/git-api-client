@@ -43,3 +43,28 @@ export const searchRepos = (term) => async (dispatch) => {
     });
   }
 };
+
+export const addBookmark = (id) => async (dispatch) => {
+  const url = new URL(`${baseURL}/api/bookmark-repo/${id}`);
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Length": 0,
+      },
+    });
+    const json = await response.json();
+    if (json.message === "Bookmarked repository") {
+      await dispatch({
+        type: NEW_BOOKMARK,
+        payload: json,
+      });
+    }
+  } catch (error) {
+    console.log("Server error: ", error);
+    await dispatch({
+      type: UPDATE_ERROR,
+      payload: error,
+    });
+  }
+};

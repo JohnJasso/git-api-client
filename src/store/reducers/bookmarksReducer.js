@@ -9,6 +9,8 @@ import {
 const initialState = {
   repos: [],
   items: [],
+  newBookmark: {},
+  deleteBookmark: {},
   errorMessage: null,
 };
 
@@ -27,12 +29,12 @@ export default function (state = initialState, action) {
     case NEW_BOOKMARK:
       return {
         ...state,
-        items: action.payload,
+        newBookmark: action.payload,
       };
     case DELETE_BOOKMARK:
       return {
         ...state,
-        items: action.payload,
+        deleteBookmark: action.payload,
       };
     case UPDATE_ERROR:
       return {
