@@ -7,8 +7,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 3.  Move to project folder: `$ cd git-api-client`
 4.  Run the corresponding **git-api-service** API
 5.  Run the application using `$ npm start`
-    > By default this will attempt to run the application in port:3000
-    > The git-api-service runs on port:3000 by default unless you have chosen another one as indicated
+    > By default this will attempt to run the application in port:3000.
+    > The git-api-service runs on port:3000 by default unless you have chosen another one as indicated.
     > Thus when running the application node will ask if you want to select a different port: Select yes (Y)
 
 ## Available Scripts
