@@ -7,7 +7,7 @@ class NavBar extends Component {
         <span className="navbar-brand mb-0 h1">
           {this.props.title}
           <span className="badge badge-pill badge-primary ml-2">
-            {this.props.totalCounters}
+            {this.props.totalBookmarks}
           </span>
         </span>
       </nav>

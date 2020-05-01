@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import BookmarksList from "../organisms/BookmarksList";
 import NavBar from "../atoms/NavBar";
+import SearchBookmark from "../molecules/SearchBookmark";
 
 class App extends Component {
   state = {
@@ -14,24 +15,28 @@ class App extends Component {
         stargazers_count: "1",
         forks_count: "3",
         watchers: "5",
+        description:
+          "A repository used in testing dfasdf dfadfas dfasd dfadsf asdfa sdfasd",
       },
       {
-        id: 1,
+        id: 2,
         name: "tetris",
         full_name: "user1/tetris",
         language: "Javascript",
         stargazers_count: "1",
         forks_count: "3",
         watchers: "5",
+        description: "A repository used in testing",
       },
       {
-        id: 1,
+        id: 3,
         name: "tic-tac-toe",
         full_name: "usuarioDoce/tic-tac-toe",
         language: "Python",
         stargazers_count: "1",
         forks_count: "3",
         watchers: "5",
+        description: "A repository used in testing",
       },
     ],
   };
@@ -58,7 +63,21 @@ class App extends Component {
           title={this.state.title}
           totalBookmarks={this.state.bookmarks.length}
         ></NavBar>
-        <main className="container">
+        <main className="container mt-5">
+          <div className="d-flex justify-content-between">
+            <div>
+              <h5 className="mb-3">Search for repositories to bookmark:</h5>
+              <SearchBookmark></SearchBookmark>
+              <BookmarksList
+                search={true}
+                bookmarks={this.state.bookmarks}
+              ></BookmarksList>
+            </div>
+            <div>
+              <h5 className="mb-3">Bookmarked repositories:</h5>
+              <BookmarksList bookmarks={this.state.bookmarks}></BookmarksList>
+            </div>
+          </div>
           {/* <List
             counters={this.state.counters}
             onReset={this.handleReset}
@@ -66,7 +85,6 @@ class App extends Component {
             onIncrement={this.handleIncrement}
             onDecrement={this.handleDecrement}
           ></List> */}
-          <BookmarksList bookmarks={this.state.bookmarks}></BookmarksList>
         </main>
       </React.Fragment>
     );

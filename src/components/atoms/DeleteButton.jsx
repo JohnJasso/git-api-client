@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 
-class StarButton extends Component {
+class DeleteButton extends Component {
   render() {
     return (
       <button
-        className="btn btn-outline-warning mt-auto mb-auto ml-5"
+        className="btn btn-outline-danger mt-auto mb-auto ml-5"
         style={{ borderRadius: "50%" }}
         // style={{ borderRadius: "50%", height: 45 }}
       >
-        <i className="fas fa-star"></i>
+        <i className="fas fa-trash-alt"></i>
       </button>
     );
   }
 }
 
-export default StarButton;
+export default DeleteButton;

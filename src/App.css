@@ -28,6 +28,10 @@
   color: #61dafb;
 }
 
+.list__repo-title {
+  min-width: 150px !important;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
