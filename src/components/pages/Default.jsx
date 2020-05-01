@@ -4,51 +4,45 @@ import BookmarksList from "../organisms/BookmarksList";
 import NavBar from "../atoms/NavBar";
 import SearchBookmark from "../molecules/SearchBookmark";
 import { connect } from "react-redux";
-import { fetchBookmarks, searchRepos, addBookmark } from "../../store/actions";
+import {
+  fetchBookmarks,
+  searchRepos,
+  addBookmark,
+  deleteBookmark,
+} from "../../store/actions";
 
 class Default extends Component {
   state = {
     title: "Github Bookmarking Application",
-    errorMessage: null,
   };
 
-  constructor() {
-    super();
-    console.log("Default - Constructor");
-  }
-
   async componentDidMount() {
-    console.log("Default - Component Mounted");
     this.props.fetchBookmarks();
   }
 
-  componentDidUpdate() {
-    console.log("App - Updated");
-  }
-
-  componentWillReceiveProps(newProp) {
-    if (newProp.message === "Bookmarked repository") {
-      this.props.bookmarks.unshift(newProp.repository);
-    }
-  }
-
   render() {
-    console.log("App - Rendered");
-
     return (
       <React.Fragment>
-        <NavBar
-          title={this.state.title}
-          totalBookmarks={this.props.bookmarks.length}
-        ></NavBar>
+        {this.props.bookmarks && (
+          <NavBar
+            title={this.state.title}
+            totalBookmarks={this.props.bookmarks.length}
+          ></NavBar>
+        )}
+        {!this.props.bookmarks && <NavBar title={this.state.title}></NavBar>}
         <main className="container mt-5">
           <div className="d-flex flex-wrap justify-content-between">
             <div className="mb-3" style={{ maxWidth: 700 }}>
+              {this.props.errorMessage && (
+                <div class="alert alert-danger" role="alert">
+                  {this.props.errorMessage}
+                </div>
+              )}
               <h5 className="mb-3">
                 Search for repositories to bookmark: <br />
                 <small className="text-muted">
                   Separate keywords and define topics and languages in the
-                  following way:
+                  following way:&nbsp;&nbsp;
                   <i>tetris+language:c+topic:game</i>
                 </small>
               </h5>
@@ -61,7 +55,7 @@ class Default extends Component {
                 onBookmark={this.handleBookmark}
               ></BookmarksList>
             </div>
-            <div>
+            <div style={{ maxWidth: 380 }}>
               <h5 className="mb-3">Bookmarked repositories:</h5>
               <BookmarksList
                 bookmarks={this.props.bookmarks}
@@ -74,57 +68,14 @@ class Default extends Component {
     );
   }
 
-  //   getBookmarks = async () => {
-  //     const url = new URL(`${this.state.baseURL}/api/bookmarks`);
-  //     try {
-  //       const response = await fetch(url);
-  //       const json = await response.json();
-  //       await this.setState({ bookmarksSaved: json });
-  //     } catch (error) {
-  //       console.log("Server error: ", error);
-  //       this.setState({ errorMessage: error });
-  //     }
-  //   };
   handleSearch = async (term) => {
     this.props.searchRepos(term);
   };
   handleBookmark = async (id) => {
-    // const url = new URL(`${this.state.baseURL}/api/bookmark-repo/${id}`);
-    // try {
-    //   const response = await fetch(url, {
-    //     method: "PUT",
-    //     headers: {
-    //       "Content-Length": 0,
-    //     },
-    //   });
-    //   const json = await response.json();
-    //   if (json.message === "Bookmarked repository") {
-    //     await this.getBookmarks();
-    //   }
-    // } catch (error) {
-    //   console.log("Server error: ", error);
-    //   this.setState({ errorMessage: error });
-    // }
     this.props.addBookmark(id);
   };
   handleDelete = async (id) => {
-    console.log("Delete", id);
-    const url = new URL(`${this.state.baseURL}/api/bookmark-repo/${id}`);
-    try {
-      const response = await fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Length": 0,
-        },
-      });
-      const json = await response.json();
-      if (json.message === "Removed bookmark") {
-        await this.getBookmarks();
-      }
-    } catch (error) {
-      console.log("Server error: ", error);
-      this.setState({ errorMessage: error });
-    }
+    this.props.deleteBookmark(id);
   };
 }
 
@@ -134,17 +85,18 @@ Default.propTypes = {
   searchRepos: PropTypes.func.isRequired,
   repos: PropTypes.array.isRequired,
   addBookmark: PropTypes.func,
-  newBookmark: PropTypes.object,
+  deleteBookmark: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
   bookmarks: state.bookmarks.items,
   repos: state.bookmarks.repos,
-  newBookmark: state.bookmarks.newBookmark,
+  errorMessage: state.bookmarks.errorMessage,
 });
 
 export default connect(mapStateToProps, {
   fetchBookmarks,
   searchRepos,
   addBookmark,
+  deleteBookmark,
 })(Default);
