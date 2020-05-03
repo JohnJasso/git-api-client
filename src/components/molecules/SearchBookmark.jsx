@@ -14,6 +14,7 @@ class SearchBookmark extends Component {
           placeholder="Insert a search term"
           aria-label="Insert a search term"
           onChange={this.onSearchTerm}
+          onKeyPress={this.sendTermOnEnter}
         />
         <div className="input-group-append">
           <button
@@ -34,6 +35,11 @@ class SearchBookmark extends Component {
   };
   sendTerm = () => {
     this.props.onSearchBookMark(this.state.searchTerm);
+  };
+  sendTermOnEnter = (e) => {
+    if ((e.which || e.keyCode) === 13) {
+      this.props.onSearchBookMark(this.state.searchTerm);
+    }
   };
 }
 
