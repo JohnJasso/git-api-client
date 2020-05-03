@@ -1,5 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+### For a more updated version of the application clone or download the develop branch
+
 ## Setting up the environment
 
 1.  You should have node.js installed. Go to the [Node.js site](https://nodejs.org/) for more information.
