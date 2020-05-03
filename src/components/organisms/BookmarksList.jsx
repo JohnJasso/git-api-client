@@ -2,7 +2,18 @@ import React, { Component } from "react";
 
 class BookmarksList extends Component {
   render() {
-    return <div className="list-group">{this.renderList()}</div>;
+    return (
+      <div className="list-group">
+        {this.props.adding === true && (
+          <div className="list-group-item d-flex justify-content-center">
+            <div className="spinner-border text-info" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        )}
+        {this.renderList()}
+      </div>
+    );
   }
   sendBookmarkId = (id) => {
     this.props.onBookmark(id);

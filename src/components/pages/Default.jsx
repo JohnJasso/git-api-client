@@ -16,6 +16,7 @@ class Default extends Component {
     title: "Github Bookmarking Application",
     loadingInit: null,
     loadingSearch: null,
+    addingBookmark: false,
   };
 
   async componentDidMount() {
@@ -65,6 +66,7 @@ class Default extends Component {
               <h5 className="mb-3">Bookmarked repositories:</h5>
               <BookmarksList
                 loading={this.state.loadingInit}
+                adding={this.state.addingBookmark}
                 bookmarks={this.props.bookmarks}
                 onDelete={this.handleDelete}
               ></BookmarksList>
@@ -81,7 +83,9 @@ class Default extends Component {
     this.setState({ loadingSearch: false });
   };
   handleBookmark = async (id) => {
-    this.props.addBookmark(id);
+    this.setState({ addingBookmark: true });
+    await this.props.addBookmark(id);
+    this.setState({ addingBookmark: false });
   };
   handleDelete = async (id) => {
     this.props.deleteBookmark(id);
