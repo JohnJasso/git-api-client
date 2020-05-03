@@ -45,11 +45,13 @@ class Default extends Component {
               )}
               <h5 className="mb-3">
                 Search for repositories to bookmark: <br />
-                <small className="text-muted">
-                  You can define languages and topics in the following
-                  way:&nbsp;
-                  <i>language:swift topic:game</i>. Each counts as a keyword and
-                  you can separate keywords with a space or + sign.
+                <small className="text-muted text-justify">
+                  Enter your keywords for repository search. <br />
+                  You can define languages, topics and repository owner in the
+                  following way:&nbsp;
+                  <i>language:swift topic:game user:JohnSmith</i>. Each counts
+                  as a keyword and you can separate keywords with a space or +
+                  sign.
                 </small>
               </h5>
               <SearchBookmark
