@@ -14,10 +14,14 @@ import {
 class Default extends Component {
   state = {
     title: "Github Bookmarking Application",
+    loadingInit: null,
+    loadingSearch: null,
   };
 
   async componentDidMount() {
-    this.props.fetchBookmarks();
+    this.setState({ loadingInit: true });
+    await this.props.fetchBookmarks();
+    this.setState({ loadingInit: false });
   }
 
   render() {
@@ -51,6 +55,7 @@ class Default extends Component {
               ></SearchBookmark>
               <BookmarksList
                 search={true}
+                loading={this.state.loadingSearch}
                 bookmarks={this.props.repos}
                 onBookmark={this.handleBookmark}
               ></BookmarksList>
@@ -58,6 +63,7 @@ class Default extends Component {
             <div style={{ maxWidth: 380 }}>
               <h5 className="mb-3">Bookmarked repositories:</h5>
               <BookmarksList
+                loading={this.state.loadingInit}
                 bookmarks={this.props.bookmarks}
                 onDelete={this.handleDelete}
               ></BookmarksList>
@@ -69,7 +75,9 @@ class Default extends Component {
   }
 
   handleSearch = async (term) => {
-    this.props.searchRepos(term);
+    this.setState({ loadingSearch: true });
+    await this.props.searchRepos(term);
+    this.setState({ loadingSearch: false });
   };
   handleBookmark = async (id) => {
     this.props.addBookmark(id);

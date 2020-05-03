@@ -11,7 +11,11 @@ class BookmarksList extends Component {
     this.props.onDelete(id);
   };
   renderList = () => {
-    if (this.props.bookmarks && this.props.bookmarks.length > 0) {
+    if (
+      this.props.bookmarks &&
+      this.props.bookmarks.length > 0 &&
+      this.props.loading === false
+    ) {
       return this.props.bookmarks.map((bookmark) => (
         <div
           key={bookmark.id}
@@ -81,6 +85,28 @@ class BookmarksList extends Component {
           )}
         </div>
       ));
+    } else if (this.props.loading === true && !this.props.search) {
+      return (
+        <div
+          className="list-group-item d-flex justify-content-center"
+          style={{ minWidth: 350 }}
+        >
+          <div className="spinner-border text-info" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      );
+    } else if (this.props.loading === true && this.props.search === true) {
+      return (
+        <div
+          className="list-group-item d-flex justify-content-center"
+          // style={{ minWidth: 350 }}
+        >
+          <div className="spinner-border text-info" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      );
     } else {
       return (
         <div className="list-group-item d-flex justify-content-center">
