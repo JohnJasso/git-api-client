@@ -23,7 +23,11 @@ class BookmarksList extends Component {
         >
           <div>
             <div className="d-flex">
-              <h5 className="mr-5 list__repo-title">{bookmark.name}</h5>
+              <h5 className="mr-5 list__repo-title">
+                <a href={bookmark.html_url} target="_blank">
+                  {bookmark.name}
+                </a>
+              </h5>
               {this.props.search && (
                 <span className="list__repo-title mr-2">
                   <i className="fas fa-user mr-2"></i>
