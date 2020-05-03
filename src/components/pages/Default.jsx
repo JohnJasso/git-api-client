@@ -45,9 +45,10 @@ class Default extends Component {
               <h5 className="mb-3">
                 Search for repositories to bookmark: <br />
                 <small className="text-muted">
-                  Separate keywords and define topics and languages in the
-                  following way:&nbsp;&nbsp;
-                  <i>tetris+language:c+topic:game</i>
+                  You can define languages and topics in the following
+                  way:&nbsp;
+                  <i>language:swift topic:game</i>. Each counts as a keyword and
+                  you can separate keywords with a space or + sign.
                 </small>
               </h5>
               <SearchBookmark
